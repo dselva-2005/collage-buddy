@@ -1,0 +1,23 @@
+{
+  "name": "college-buddy",
+  "version": "1.0.0",
+  "description": "my-express-app/\r ├── node_modules/         # Contains all the npm packages\r ├── public/               # Static files (CSS, JavaScript, images)\r │   ├── css/\r │   ├── js/\r │   └── images/\r ├── routes/               # Route definitions\r │   ├── index.js          # Main routes file\r │   └── otherRoutes.js    # Additional routes\r ├── views/                # Template files (if using a templating engine)\r │   ├── layouts/          # Layout files\r │   ├── partials/         # Reusable partials\r │   └── index.ejs         # Example view file\r ├── models/               # Database models (if using an ORM)\r │   └── user.js           # Example model file\r ├── controllers/          # Controllers to handle business logic\r │   └── userController.js  # Example controller file\r ├── middlewares/          # Custom middleware functions\r │   └── auth.js           # Example middleware file\r ├── config/               # Configuration files (e.g., environment variables)\r │   └── config.js         # Configuration file\r ├── tests/                # Test files\r │   └── app.test.js       # Example test file\r ├── .env                  # Environment variables\r ├── .gitignore            # Files and folders to ignore in Git\r ├── package.json          # NPM package manifest\r ├── package-lock.json     # NPM package lock file\r └── server.js             # Entry point for the application",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "ejs": "^3.1.10",
+    "express": "^4.21.1",
+    "mongoose": "^8.7.1",
+    "nodemailer": "^6.9.15"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  }
+}

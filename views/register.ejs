@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Registration</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            margin-top: 50px;
+            max-width: 600px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            margin-bottom: 30px;
+            color: #0056b3;
+        }
+        .form-label {
+            font-weight: bold;
+        }
+        .otp-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .otp-input {
+            width: 50px;
+            height: 50px;
+            font-size: 24px;
+            text-align: center;
+            margin: 0 5px;
+            border: 2px solid #007bff;
+            border-radius: 5px;
+            transition: border-color 0.3s;
+        }
+        .otp-input:focus {
+            outline: none;
+            border-color: #28a745;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+        .timer {
+            text-align: center;
+            font-size: 18px;
+            color: #dc3545; /* Bootstrap danger color for timer */
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2 class="text-center">Student Registration</h2>
+    <form id="registrationForm">
+        <div class="mb-3">
+            <label for="firstName" class="form-label">First Name</label>
+            <input type="text" class="form-control" id="firstName" name="firstName" required>
+        </div>
+        <div class="mb-3">
+            <label for="lastName" class="form-label">Last Name</label>
+            <input type="text" class="form-control" id="lastName" name="lastName" required>
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email Address</label>
+            <input type="email" class="form-control" id="email" name="email" required>
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="password" name="password" required>
+        </div>
+        <div class="mb-3">
+            <label for="confirmPassword" class="form-label">Confirm Password</label>
+            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+        </div>
+        <div class="mb-3">
+            <label for="course" class="form-label">Select Course</label>
+            <select class="form-select" id="course" name="course" required>
+                <option value="" disabled selected>Select your course</option>
+                <option value="Computer Science">Computer Science</option>
+                <option value="Mechanical Engineering">Mechanical Engineering</option>
+                <option value="Civil Engineering">Civil Engineering</option>
+                <option value="Electrical Engineering">Electrical Engineering</option>
+                <option value="Business Administration">Business Administration</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Register</button>
+    </form>
+
+    <!-- OTP Verification Section -->
+    <div id="otpSection" style="display: none;">
+        <h3 class="text-center mt-4">Verify Your OTP</h3>
+        <input type="hidden" id="hiddenEmail" name="hiddenEmail">
+        <div class="otp-container">
+            <input type="text" class="otp-input" maxlength="1" oninput="moveToNext(this, 'input2')" id="input1">
+            <input type="text" class="otp-input" maxlength="1" oninput="moveToNext(this, 'input3')" id="input2">
+            <input type="text" class="otp-input" maxlength="1" oninput="moveToNext(this, 'input4')" id="input3">
+            <input type="text" class="otp-input" maxlength="1" oninput="moveToNext(this, 'input5')" id="input4">
+            <input type="text" class="otp-input" maxlength="1" oninput="moveToNext(this, 'input6')" id="input5">
+            <input type="text" class="otp-input" maxlength="1" id="input6">
+        </div>
+        <div class="timer" id="otpTimer">2:00</div>
+        <div class="text-center mt-3">
+            <button class="btn btn-primary" onclick="submitOTP()">Verify OTP</button>
+        </div>
+    </div>
+
+    <p class="text-center mt-3">Already have an account? <a href="/login">Login here</a>.</p>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Handle form submission and show OTP section
+    document.getElementById('registrationForm').onsubmit = async function(event) {
+        event.preventDefault(); // Prevent default form submission
+        
+        // Get form data
+        const firstName = document.getElementById('firstName').value;
+        const lastName = document.getElementById('lastName').value;
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        const course = document.getElementById('course').value;
+        
+        // Set hidden name input value
+        document.getElementById('hiddenEmail').value = `${email}`;
+
+        // Create an object to send
+        const data = {
+            "firstName": firstName,
+            "lastName": lastName,
+            "email": email,
+            "password": password,
+            "confirmPassword": confirmPassword,
+            "course": course
+        };
+
+        // Send registration data via AJAX
+        try {
+            const response = await fetch('/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+
+            if (response.ok) {
+                // Hide the registration form
+                document.getElementById('registrationForm').style.display = 'none';
+                // Show the OTP section
+                document.getElementById('otpSection').style.display = 'block';
+                // Start the timer
+                startTimer(120); // 2 minutes in seconds
+            } else {
+                console.error('Registration failed:', response.statusText);
+                alert('Registration failed. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred. Please try again.');
+        }
+    };
+
+    function moveToNext(currentInput, nextInputId) {
+        if (currentInput.value.length === 1) {
+            document.getElementById(nextInputId).focus();
+        }
+    }
+
+    async function submitOTP() {
+        const firstName = document.getElementById('firstName').value;
+        const lastName = document.getElementById('lastName').value;
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const course = document.getElementById('course').value;
+        const otp = [
+            document.getElementById('input1').value,
+            document.getElementById('input2').value,
+            document.getElementById('input3').value,
+            document.getElementById('input4').value,
+            document.getElementById('input5').value,
+            document.getElementById('input6').value,
+        ].join('');
+        const hiddenEmail = document.getElementById('hiddenEmail').value;
+        data = {
+            "firstName": firstName,
+            "lastName": lastName,
+            "email": email,
+            "password": password,
+            "course": course,
+            "otp":otp,
+        }
+        const response = await fetch('/verify-otp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+        if(response.ok){
+            const result = await response.json();
+            document.getElementById('registrationForm').reset()
+            if (result.success) {
+                window.location.href = result.redirectUrl;
+            } else {
+                alert('OTP verification failed');
+            }
+        }
+    }
+
+    function startTimer(duration) {
+        let timer = duration, minutes, seconds;
+        const display = document.getElementById('otpTimer');
+        
+        const interval = setInterval(() => {
+            minutes = parseInt(timer / 60, 10);
+            seconds = parseInt(timer % 60, 10);
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+            display.textContent = minutes + ":" + seconds;
+
+            if (--timer < 0) {
+                clearInterval(interval);
+                display.textContent = "Time's up!";
+                // Optionally, you can disable the OTP inputs or take further actions here
+                disableOtpInputs();
+            }
+        }, 1000);
+    }
+
+    function disableOtpInputs() {
+        const otpInputs = document.querySelectorAll('.otp-input');
+        otpInputs.forEach(input => {
+            input.disabled = true;
+        });
+        // Optionally, you can show a message to the user
+        alert("OTP expired. Please request a new one.");
+    }
+</script>
+</body>
+</html>
