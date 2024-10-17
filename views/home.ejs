@@ -32,16 +32,24 @@
 
         </nav>
         <div class="icons">
+            <% if (user) { %>
+                <a href="/logout" class="icons" title="Logout">
+                        <div class="fa fa-2x fa-sign-out" >
+                        </div>
+                    </a>
+                <% } else { %>
+                    <div class="fa fa-users fa-2x" id="login-btn"></div>
+                    <% } %>
+            <div id="login-btn" hidden></div>
             <div class="fa fa-bars fa-2x" id="menu-btn"></div>
             <div class="fa fa-search fa-2x" id="search-btn"></div>
             <div class="fa fa-shopping-cart fa-2x" id="cart-btn"></div>
-            <div class="fa fa-users fa-2x" id="login-btn"></div>
-
         </div>
+
         <form class="search-form">
             <input type="search" id="search-box" placeholder="Search Here">
             <label for="search-box" class="fa fa search fa-2x"></label>
-            <a href="search.php"></a>
+            <a href=""></a>
         </form>
 
         <div class="shopping-cart">
@@ -77,10 +85,10 @@
             <a href="http://localhost/php/shopcart/view_products.php" class="btn">Add to Cart</a>
         </div>
 
-        <form action="#" class="login-form">
+        <form action="/login" method="post" class="login-form">
             <h3>Login</h3>
-            <input type="email" placeholder="your email" class="box">
-            <input type="password" placeholder="your password" class="box">
+            <input name="email" type="email" placeholder="your email" class="box">
+            <input name="password" type="password" placeholder="your password" class="box">
 
             <p>Forgot your password? <a href="#"> Click Here</a></p>
             <p>Don't have an account? <a href="#"> Create Now</a></p>
@@ -130,94 +138,35 @@
             </div>
     </section>
     <!-- our feature section -->
-
     <section class="products" id="products">
         <h1 class="heading"> our <span>products</span></h1>
-
+    
         <div class="swiper product-slider">
             <div class="swiper-wrapper">
-                <div class="swiper-slide box">
-                    <img src="/images/drafter.jpg">
-                    <h1>Drafter</h1>
-                    <div class="price"> ₹500/- - ₹800/-</div>
-                    <div class="stars">
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star-half"></i>
+                <% products.forEach(product => { %>
+                    <div class="swiper-slide box">
+                        <img src="<%= product.image %>" alt="<%= product.name %>" class="card-img">
+                        <h1><%= product.name %></h1>
+                        <div class="price"> ₹<%= product.price %>/--</div>
+                        <div class="stars">
+                            <% for (let i = 0; i < Math.floor(product.ratings); i++) { %>
+                                <i class="fa fa-star"></i>
+                            <% } %>
+                            <% if (product.ratings % 1 !== 0) { %>
+                                <i class="fa fa-star-half"></i>
+                                <i class="fa fa-star-half"></i>
+                            <% } %>
+                            <% for (let i = Math.ceil(product.ratings); i < 5; i++) { %>
+                                <i class="fa fa-star-o"></i>
+                            <% } %>
+                        </div>
+                        <a href="http://localhost/php/shopcart/view_products.php" class="btn">Add to Cart</a>
                     </div>
-                    <a href="http://localhost/php/shopcart/view_products.php" class="btn">Add to Cart</a>
-                </div>
-
-                <div class="swiper-slide box">
-                    <img src="/images/notebook.jpg">
-                    <h1>Reference Books</h1>
-                    <div class="price"> ₹400/- - ₹600/-</div>
-                    <div class="stars">
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star-half"></i>
-                    </div>
-                    <a href="http://localhost/php/shopcart/view_products.php" class="btn">Add to Cart</a>
-                </div>
-
-                <div class="swiper-slide box">
-                    <img src="/images/calci.jpg">
-                    <h1>Scientific Calculator</h1>
-                    <div class="price"> ₹800/- - ₹1000/-</div>
-                    <div class="stars">
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star-half"></i>
-                    </div>
-                    <a href="http://localhost/php/shopcart/view_products.php" class="btn">Add to Cart</a>
-                </div>
+                <% }); %>
             </div>
         </div>
-
-        <div class="swiper product-slider">
-            <div class="swiper-wrapper">
-
-                <div class="swiper-slide box">
-                    <img src="/images/folder.jpg">
-                    <h1>Folders</h1>
-                    <div class="price"> ₹300/- - ₹500/-</div>
-                    <div class="stars">
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star-half"></i>
-                    </div>
-                    <a href="http://localhost/php/shopcart/view_products.php" class="btn">Add to Cart</a>
-                </div>
-
-
-
-
-                <div class="swiper-slide box">
-                    <img src="/images/pen.jpg">
-                    <h1>Pens</h1>
-                    <div class="price"> ₹100/- - ₹250/-</div>
-                    <div class="stars">
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star-half"></i>
-                    </div>
-                    <a href="http://localhost/php/shopcart/view_products.php" class="btn">Add to Cart</a>
-                </div>
-            </div>
-        </div>
-
-
     </section>
+    
 
     <section class="review" id="review">
         <h1 class="heading"> customer's<span>review</span></h1>

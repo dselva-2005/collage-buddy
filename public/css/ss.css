@@ -496,3 +496,7 @@ section
 
 }
 
+.card-img {
+  max-width: 100%; /* Limit image width to the parent element */
+  height: auto; /* Maintain aspect ratio */
+}

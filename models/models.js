@@ -59,9 +59,34 @@ const otpSchema = new mongoose.Schema({
   });
   
 
+  const productSchema = new mongoose.Schema({
+    name: {
+      type: String,
+      required: true,
+    },
+    image: {
+      type: String,  // You can store the image URL or path here
+      required: true,
+    },
+    ratings: {
+      type: Number,
+      required: true,
+      min: 0,
+      max: 5, // Assuming the rating is out of 5
+    },
+    price:{
+      type: Number,
+      required: true,
+    }
+  });
+  
+  const Product = mongoose.model('Product', productSchema);
+  
+
 const OTP = mongoose.model('OTP', otpSchema);
 const User = mongoose.model('user', userSchema);
 module.exports = {
     User,
     OTP,
+    Product,
   };
