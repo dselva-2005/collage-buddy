@@ -306,3 +306,22 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
+
+
+// Search endpoint
+app.get('/products/search', async (req, res) => {
+  const query = req.query.query;
+
+  try {
+      // Full text search using Mongoose
+      const products = await Product.find({
+          $text: { $search: query }
+      });
+
+      res.render('search', { products:products });
+  } catch (error) {
+      console.error('Error fetching products:', error);
+      res.status(500).send('Server error');
+  }
+});

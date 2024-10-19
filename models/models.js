@@ -59,27 +59,29 @@ const otpSchema = new mongoose.Schema({
   });
   
 
-  const productSchema = new mongoose.Schema({
-    name: {
-      type: String,
-      required: true,
-    },
-    image: {
-      type: String,  // You can store the image URL or path here
-      required: true,
-    },
-    ratings: {
-      type: Number,
-      required: true,
-      min: 0,
-      max: 5, // Assuming the rating is out of 5
-    },
-    price:{
-      type: Number,
-      required: true,
-    }
-  });
-  
+    const productSchema = new mongoose.Schema({
+      name: {
+        type: String,
+        required: true,
+      },
+      image: {
+        type: String,  // You can store the image URL or path here
+        required: true,
+      },
+      ratings: {
+        type: Number,
+        required: true,
+        min: 0,
+        max: 5, // Assuming the rating is out of 5
+      },
+      price:{
+        type: Number,
+        required: true,
+      }
+    });
+
+    productSchema.index({ name: 'text' });
+    
   const Product = mongoose.model('Product', productSchema);
   
 

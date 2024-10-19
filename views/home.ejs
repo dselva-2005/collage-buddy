@@ -9,12 +9,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- Code for font awesome cdn -->
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
 
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css"> <!-- Link to Bootstrap CSS -->
 
     <!-- Code for linking css file -->
     <link rel="stylesheet" type="text/css" href="/css/ss.css">
     <!-- Code for linking css file -->
+     
 </head>
 
 <body>
@@ -46,43 +48,15 @@
             <div class="fa fa-shopping-cart fa-2x" id="cart-btn"></div>
         </div>
 
-        <form class="search-form">
-            <input type="search" id="search-box" placeholder="Search Here">
+        <form class="search-form" action="/products/search" method="get">
+            <input name="query" id="query" type="search" placeholder="Search Here">
             <label for="search-box" class="fa fa search fa-2x"></label>
             <a href=""></a>
         </form>
-
         <div class="shopping-cart">
-            <div class="box">
-                <i class="fa fa-trash"></i>
-                <img src="/images/drafter.jpg">
-                <div class="content">
-                    <h3>Drafter</h3>
-                    <span class="price">₹500/-</span>
-                    <span class="quantity">Qty : 5</span>
-                </div>
+            <div id="cart" >
             </div>
-            <div class="box">
-                <i class="fa fa-trash"></i>
-                <img src="/images/notebook.jpg">
-                <div class="content">
-                    <h3>Notebooks</h3>
-                    <span class="price">₹400/-</span>
-                    <span class="quantity">Qty : 7</span>
-                </div>
-            </div>
-            <div class="box">
-                <i class="fa fa-trash"></i>
-                <img src="/images/calci.jpg">
-                <div class="content">
-                    <h3>Scientific calculator</h3>
-                    <span class="price">₹800/-</span>
-                    <span class="quantity">Qty : 3</span>
-                </div>
-            </div>
-            <div class="total"> total : ₹1700/- </div>
-            <a href="#" class="btn">Checkout</a>
-            <a href="http://localhost/php/shopcart/view_products.php" class="btn">Add to Cart</a>
+             <a href="#" class="btn" id="checkout-btn">Checkout</a>
         </div>
 
         <form action="/login" method="post" class="login-form">
@@ -144,10 +118,10 @@
         <div class="swiper product-slider">
             <div class="swiper-wrapper">
                 <% products.forEach(product => { %>
-                    <div class="swiper-slide box">
+                    <div class="swiper-slide box" id="<%= product.id %>">
                         <img src="<%= product.image %>" alt="<%= product.name %>" class="card-img">
                         <h1><%= product.name %></h1>
-                        <div class="price"> ₹<%= product.price %>/--</div>
+                        <div class="price"> ₹<%= product.price %></div>
                         <div class="stars">
                             <% for (let i = 0; i < Math.floor(product.ratings); i++) { %>
                                 <i class="fa fa-star"></i>
@@ -160,7 +134,7 @@
                                 <i class="fa fa-star-o"></i>
                             <% } %>
                         </div>
-                        <a href="http://localhost/php/shopcart/view_products.php" class="btn">Add to Cart</a>
+                        <a  onclick="addTocart(event)" class="btn">Add to Cart</a>
                     </div>
                 <% }); %>
             </div>

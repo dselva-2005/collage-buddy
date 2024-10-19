@@ -500,3 +500,11 @@ section
   max-width: 100%; /* Limit image width to the parent element */
   height: auto; /* Maintain aspect ratio */
 }
+
+.label{
+  font-size: 1.5rem;
+}
+
+.shopping-cart{
+  overflow:visible;
+}
