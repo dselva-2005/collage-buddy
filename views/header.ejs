@@ -1,0 +1,71 @@
+    <!-- header section  -->
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>College Buddy</title>
+        <!-- Code for font awesome cdn -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <!-- Code for font awesome cdn -->
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+    
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css"> <!-- Link to Bootstrap CSS -->
+
+        <link rel="stylesheet" href="/css/ss.css">
+        <!-- Code for linking css file -->
+    
+    </head>
+    
+    <header class="header">
+        <a href="/" class="logo"> <i class="fa fa-graduation-cap fa-2x" aria-hidden="true"></i>College Buddy </a>
+
+
+        <nav class="navbar">
+            <a href="/">Home</a>
+            <a href="/users/<%- user._id %>/orders">My Orders</a>
+            <a href="/products/all">Product</a>
+            <a href="/testimonies">Review</a>
+
+        </nav>
+        <div class="icons">
+            <% if (user) { %>
+                <a href="/logout" class="icons" title="Logout">
+                        <div class="fa fa-2x fa-sign-out" >
+                        </div>
+                    </a>
+                <% } else { %>
+                    <div class="fa fa-users fa-2x" id="login-btn"></div>
+                    <% } %>
+            <div id="login-btn" hidden></div>
+            <div class="fa fa-bars fa-2x" id="menu-btn"></div>
+            <div class="fa fa-search fa-2x" id="search-btn"></div>
+            <div class="fa fa-shopping-cart fa-2x" id="cart-btn">
+                <span id="cart-count" class="cart-count" style="display: none;">0</span>
+            </div>
+        </div>
+
+        <form class="search-form" action="/products/search" method="get">
+            <input name="query" id="query" type="search" placeholder="Search Here">
+            <label for="search-box" class="fa fa search fa-2x"></label>
+            <a href=""></a>
+        </form>
+        <div class="shopping-cart">
+            <div id="cart" >
+            </div>
+             <a href="#" class="btn" id="checkout-btn" >Checkout</a>
+             <a class="btn" id="clear-cart-btn">Clear Cart</a>
+
+        </div>
+
+        <form action="/login" method="post" class="login-form">
+            <h3>Login</h3>
+            <input name="email" type="email" placeholder="your email" class="box">
+            <input name="password" type="password" placeholder="your password" class="box">
+
+            <p>Forgot your password? <a href="#"> Click Here</a></p>
+            <p>Don't have an account? <a href="#"> Create Now</a></p>
+
+            <input type="submit" value="Login" class="btn">
+        </form>
+
+    </header>

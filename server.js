@@ -8,7 +8,7 @@ const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
-const { OTP, User, Product } = require('./models/models');
+const { OTP, User, Product, Review, Testimony, Order } = require('./models/models');
 const multer = require('multer');
 
 // Function to generate a 6-digit OTP
@@ -75,12 +75,19 @@ const transporter = nodemailer.createTransport({
 });
 
 // Home route (protected route)
-app.get('/', async (req, res) => {
-    try {
-      const products = await Product.find();
-      res.render('home', { user: req.session.user, products:products }); // Render products.ejs and pass products to it
+// Home route (protected route)
+app.get('/', isAuthenticated, async (req, res) => {
+  try {
+    const products = await Product.find();
+    const testimonies = await Testimony.find(); // Fetch all testimonies
+
+    res.render('home', { 
+      user: req.session.user, 
+      products: products, 
+      testimonies: testimonies // Pass testimonies to the template
+    }); 
   } catch (error) {
-      res.status(500).send('Server Error');
+    res.status(500).send('Server Error');
   }
 });
 
@@ -250,6 +257,71 @@ app.get('/products/delete/:id', async (req, res) => {
   }
 });
 
+app.get('/products/all', async (req, res) => {
+  try {
+    const products = await Product.find(); // Fetch all products from the database
+    res.render('allProducts', { user: req.session.user, products });  // Pass products to EJS view
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server Error');
+  }
+});
+
+// Endpoint to get product details with reviews
+app.get('/products/:id', async (req, res) => {
+  try {
+      const productId = req.params.id;
+
+      // Find the product by ID
+      const product = await Product.findById(productId);
+      
+      // If the product doesn't exist, return a 404 error
+      if (!product) {
+          return res.status(404).send('Product not found');
+      }
+
+      // Fetch the reviews for the product
+      const reviews = await Review.find({ productId }).populate('userId', 'firstName lastName'); // Populate user details
+      
+      // Render the product detail page with the product and its reviews
+      res.render('productDetail', {
+          user: req.session.user, 
+          product,
+          reviews,
+      });
+  } catch (error) {
+      console.error(error);
+      res.status(500).send('Server Error');
+  }
+});
+
+app.post('/products/:id/reviews', async (req, res) => {
+  try {
+      const productId = req.params.id;
+      const { reviewText, rating } = req.body;
+
+      // Assuming you have a logged-in user
+      const userId = req.session.user._id;
+
+      // Create a new review
+      const review = new Review({
+          productId,
+          userId,
+          reviewText,
+          rating
+      });
+
+      // Save the review
+      await review.save();
+
+      // Redirect back to the product detail page
+      res.redirect(`/products/${productId}`);
+  } catch (error) {
+      console.error('Error saving review:', error);
+      res.status(500).send('Server Error');
+  }
+});
+
 
 // GET all users
 app.get('/users', async (req, res) => {
@@ -304,7 +376,7 @@ app.get('/users/delete/:id', async (req, res) => {
 // Start the server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`Server running at http://localhost:${PORT}/`);
 });
 
 
@@ -323,5 +395,88 @@ app.get('/products/search', async (req, res) => {
   } catch (error) {
       console.error('Error fetching products:', error);
       res.status(500).send('Server error');
+  }
+});
+
+
+app.get('/testimonies', (req, res) => {
+  res.render('testimony', { user: req.session.user, message: null });
+});
+
+// Route to handle testimony submission
+app.post('/testimonies', async (req, res) => {
+  const { userName, review } = req.body;
+  
+  // Create a new testimony
+  const newTestimony = new Testimony({
+      userName,
+      review,
+      createdAt: new Date()
+  });
+
+  try {
+      await newTestimony.save(); // Save to database
+      res.redirect('/')
+  } catch (error) {
+      console.error('Error saving testimony:', error);
+      res.render('testimony', { message: 'There was an error submitting your testimony. Please try again.' });
+  }
+});
+
+
+app.post('/checkout',async (req,res)=>{
+userId = req.session.user._id
+cartItems = req.body
+const totalAmount = cartItems.reduce((total, item) => total + item.price * item.quantity, 0); // Calculate total
+console.log(totalAmount)
+// Create a new order
+let order = new Order({
+  userId,
+  items: cartItems,
+  totalAmount,
+  status: 'Pending'
+});
+// // Save the order to the database
+  dborder = await order.save()
+  res.send({orderId:dborder._id, success:true})
+});
+
+
+app.get('/order/:id', async (req, res) => {
+  try {
+      const orderId = req.params.id;
+      const order = await Order.findById(orderId); // Populate userId if you need user info
+
+      if (!order) {
+          return res.status(404).json({ message: 'Order not found' });
+      }
+
+      res.render('bill', { order }); // Render bill view with order data
+  } catch (err) {
+      console.error('Error fetching order:', err);
+      res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+// Endpoint to get all orders of a user in reverse order and render the EJS view
+app.get('/users/:userId/orders', async (req, res) => {
+  const userId = req.params.userId;
+
+  try {
+    // Find all orders by userId, sort by createdAt in descending order
+    const orders = await Order.find({ userId })
+      .sort({ createdAt: -1 }) // Sort orders by creation date in reverse order
+      .populate('items.id') // Populate product details
+      .exec();
+
+    if (!orders.length) {
+      return res.render('orders', { orders: [], message: 'No orders found for this user.' });
+    }
+
+    // Render the EJS view and pass the orders data
+    res.render('orders', { orders, message: null, user:req.session.user });
+  } catch (error) {
+    console.error(error);
+    res.status(500).render('orders', { orders: [], message: 'Server error. Could not fetch orders.' });
   }
 });

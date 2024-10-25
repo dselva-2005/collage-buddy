@@ -508,3 +508,44 @@ section
 .shopping-cart{
   overflow:visible;
 }
+
+#cart-btn{
+  position: relative;
+}
+
+.cart-icon {
+  position: relative;
+  display: inline-block;
+}
+
+.cart-count {
+  position: absolute;
+  top: -17px;
+  right: -16px;
+  background-color: red;
+  color: white;
+  border-radius: 44%;
+  height: 10px;
+  width: 30px;
+  text-align: center;
+  font-size: 15px;
+  padding-bottom: 40px;
+}
+
+.card-show{
+  width: 300px;
+}
+
+.viewPro{
+  width: 300pc;
+}
+
+.img-fluid-fix{
+  max-width: 72%;
+  height: auto;
+  display: inline;
+}
+
+.wid{
+  width: 70vw;
+}

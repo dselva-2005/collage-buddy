@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+    <title>Product Page</title>
+</head>
+<body>
+    <%- include('header') %>
+    <div class="container" style="margin-top: 100px;">
+        <!-- Our feature section -->
+        <section class="products" id="products">
+            <h1 class="heading"> Our <span>products</span></h1>
+            <% for (let i = 0; i < products.length; i++) { %>
+                <% if (i % 3 === 0) { %> <!-- Start a new swiper container for every 3 products -->
+                    
+                    
+                    <div class="swiper product-slider"> <!-- New swiper container -->
+                        <div class="swiper-wrapper">
+                <% } %>
+                
+                <div class="swiper-slide box" id="<%= products[i].id %>">
+                    <img src="http://localhost:3000/<%= products[i].image %>" alt="<%= products[i].name %>" class="card-img"  onclick="specific_page(event)">
+                    <h1><%= products[i].name %></h1>
+                    <div class="price"> ₹<%= products[i].price %></div>
+                    <div class="stars">
+                        <% for (let j = 0; j < Math.floor(products[i].ratings); j++) { %>
+                            <i class="fa fa-star"></i>
+                        <% } %>
+                        <% if (products[i].ratings % 1 !== 0) { %>
+                            <i class="fa fa-star-half"></i>
+                        <% } %>
+                        <% for (let j = Math.ceil(products[i].ratings); j < 5; j++) { %>
+                            <i class="fa fa-star-o"></i>
+                        <% } %>
+                    </div>
+                    <a onclick="addTocart(event)" class="btn">Add to Cart</a>
+                </div>
+            
+                <% if (i % 3 === 2 || i === products.length - 1) { %> <!-- Close the current swiper structure -->
+                    </div> <!-- Close the swiper-wrapper -->
+                    </div> <!-- Close the swiper-container -->
+                <% } %>
+            <% } %>
+        </section>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="/js/sc.js"></script>
+    <script>
+        // Initialize all swiper instances
+        const swipers = document.querySelectorAll('.product-slider');
+        swipers.forEach((swiper) => {
+            new Swiper(swiper, {
+                slidesPerView: 1,
+                spaceBetween: 10,
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+                breakpoints: {
+                    640: {
+                        slidesPerView: 2,
+                        spaceBetween: 20,
+                    },
+                    768: {
+                        slidesPerView: 3,
+                        spaceBetween: 30,
+                    },
+                },
+            });
+        });
+    </script>
+</body>
+</html>

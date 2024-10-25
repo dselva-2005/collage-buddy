@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Your Testimony</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/styles.css"> <!-- Include your custom CSS file -->
+</head>
+<body>
+    <%- include('header') %>
+    <div class="container mt-5" style="padding-top: 110px;">
+        
+        <h1 class="text-center mb-4">Share Your Testimony</h1>
+        <form id="testimony-form" action="/testimonies" method="POST">
+            <div class="form-group">
+                <input type="text" id="userName" name="userName" class="form-control" required hidden value="<%- user.firstName %> <%- user.lastName  %>">
+            </div>
+            <div class="form-group">
+                <label for="review">Your Review:</label>
+                <textarea id="review" name="review" class="form-control" required minlength="10" maxlength="500"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Submit Review</button>
+        </form>
+        <% if (message) { %>
+            <div id="message" class="alert alert-info mt-4"><%= message %></div>
+        <% } %>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> <!-- Bootstrap JS -->
+</body>
+</html>
